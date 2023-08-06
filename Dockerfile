@@ -7,14 +7,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/VerticalSlice.Api/VerticalSlice.Api.csproj", "src/VerticalSlice.Api/"]
-RUN dotnet restore "src/VerticalSlice.Api/VerticalSlice.Api.csproj"
-COPY . .
-WORKDIR "/src/src/VerticalSlice.Api"
-RUN dotnet build "VerticalSlice.Api.csproj" -c Release -o /app/build
+COPY /src .
+RUN dotnet restore "VerticalSlice.Api/VerticalSlice.Api.csproj"
+RUN dotnet build "VerticalSlice.Api/VerticalSlice.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "VerticalSlice.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "VerticalSlice.Api/VerticalSlice.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
